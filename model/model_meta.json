@@ -1,0 +1,168 @@
+{
+    "model_name": "RandomForestClassifier",
+    "classes": [
+        "Dropout",
+        "Enrolled",
+        "Graduate"
+    ],
+    "input_features": [
+        "Marital_status",
+        "Application_mode",
+        "Application_order",
+        "Course",
+        "Daytime_evening_attendance",
+        "Previous_qualification",
+        "Previous_qualification_grade",
+        "Nacionality",
+        "Mothers_qualification",
+        "Fathers_qualification",
+        "Mothers_occupation",
+        "Fathers_occupation",
+        "Admission_grade",
+        "Displaced",
+        "Educational_special_needs",
+        "Debtor",
+        "Tuition_fees_up_to_date",
+        "Gender",
+        "Scholarship_holder",
+        "Age_at_enrollment",
+        "International",
+        "Curricular_units_1st_sem_credited",
+        "Curricular_units_1st_sem_enrolled",
+        "Curricular_units_1st_sem_evaluations",
+        "Curricular_units_1st_sem_approved",
+        "Curricular_units_1st_sem_grade",
+        "Curricular_units_1st_sem_without_evaluations",
+        "Curricular_units_2nd_sem_credited",
+        "Curricular_units_2nd_sem_enrolled",
+        "Curricular_units_2nd_sem_evaluations",
+        "Curricular_units_2nd_sem_approved",
+        "Curricular_units_2nd_sem_grade",
+        "Curricular_units_2nd_sem_without_evaluations",
+        "Unemployment_rate",
+        "Inflation_rate",
+        "GDP",
+        "Approval_rate_1st",
+        "Approval_rate_2nd",
+        "Total_enrolled",
+        "Total_approved",
+        "Total_approval_rate",
+        "Grade_progression",
+        "Approved_diff",
+        "Financial_risk_index"
+    ],
+    "raw_features": [
+        "Marital_status",
+        "Application_mode",
+        "Application_order",
+        "Course",
+        "Daytime_evening_attendance",
+        "Previous_qualification",
+        "Previous_qualification_grade",
+        "Nacionality",
+        "Mothers_qualification",
+        "Fathers_qualification",
+        "Mothers_occupation",
+        "Fathers_occupation",
+        "Admission_grade",
+        "Displaced",
+        "Educational_special_needs",
+        "Debtor",
+        "Tuition_fees_up_to_date",
+        "Gender",
+        "Scholarship_holder",
+        "Age_at_enrollment",
+        "International",
+        "Curricular_units_1st_sem_credited",
+        "Curricular_units_1st_sem_enrolled",
+        "Curricular_units_1st_sem_evaluations",
+        "Curricular_units_1st_sem_approved",
+        "Curricular_units_1st_sem_grade",
+        "Curricular_units_1st_sem_without_evaluations",
+        "Curricular_units_2nd_sem_credited",
+        "Curricular_units_2nd_sem_enrolled",
+        "Curricular_units_2nd_sem_evaluations",
+        "Curricular_units_2nd_sem_approved",
+        "Curricular_units_2nd_sem_grade",
+        "Curricular_units_2nd_sem_without_evaluations",
+        "Unemployment_rate",
+        "Inflation_rate",
+        "GDP"
+    ],
+    "metrics": {
+        "accuracy": 0.7706,
+        "f1_macro": 0.7152,
+        "f1_weighted": 0.7688,
+        "roc_auc_ovr": 0.8916,
+        "dropout_recall": 0.757,
+        "dropout_precision": 0.8301
+    },
+    "best_parameters": {
+        "class_weight": "balanced_subsample",
+        "max_depth": 14,
+        "min_samples_split": 5,
+        "n_estimators": 300
+    },
+    "top_features": [
+        {
+            "Feature": "Total_approval_rate",
+            "Importance": 0.10139268708654774
+        },
+        {
+            "Feature": "Approval_rate_2nd",
+            "Importance": 0.09157400093691621
+        },
+        {
+            "Feature": "Curricular_units_2nd_sem_grade",
+            "Importance": 0.05753493297290066
+        },
+        {
+            "Feature": "Curricular_units_2nd_sem_approved",
+            "Importance": 0.055394686336646654
+        },
+        {
+            "Feature": "Approval_rate_1st",
+            "Importance": 0.049467870920389574
+        },
+        {
+            "Feature": "Total_approved",
+            "Importance": 0.048229621748914854
+        },
+        {
+            "Feature": "Financial_risk_index",
+            "Importance": 0.038227884642739456
+        },
+        {
+            "Feature": "Curricular_units_1st_sem_grade",
+            "Importance": 0.03479950597988603
+        },
+        {
+            "Feature": "Age_at_enrollment",
+            "Importance": 0.03338892821103265
+        },
+        {
+            "Feature": "Admission_grade",
+            "Importance": 0.032130131836891916
+        },
+        {
+            "Feature": "Previous_qualification_grade",
+            "Importance": 0.029677729962274305
+        },
+        {
+            "Feature": "Grade_progression",
+            "Importance": 0.028345551286411887
+        },
+        {
+            "Feature": "Curricular_units_1st_sem_approved",
+            "Importance": 0.02814922842521127
+        },
+        {
+            "Feature": "Course",
+            "Importance": 0.02592000790665541
+        },
+        {
+            "Feature": "Tuition_fees_up_to_date",
+            "Importance": 0.025405933262682083
+        }
+    ]
+}
