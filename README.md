@@ -115,7 +115,7 @@ Aplikasi prototype deteksi dini dan simulasi kebijakan dapat dijalankan secara l
 
 ### Tautan Deployment Cloud
 Aplikasi prototype ini dapat diakses secara daring melalui Streamlit Community Cloud:
-- **Tautan Aplikasi Web**: *[https://jaya-jaya-institut-retention.streamlit.app/ - Placeholder]*
+- **Tautan Aplikasi Web**: *[(https://jaya-institute.streamlit.app/)]*
 
 ---
 
