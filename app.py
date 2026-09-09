@@ -77,6 +77,13 @@ st.markdown("""
         border-radius: 8px;
         margin-top: 1rem;
     }
+    .simulation-box {
+        background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%);
+        border: 1px solid #C7D2FE;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -178,7 +185,7 @@ APPLICATION_MODE_DICT = {
 
 
 # ---------------------------------------------------------
-# Sidebar
+# Sidebar Navigation
 # ---------------------------------------------------------
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/graduation-cap.png", width=70)
@@ -191,6 +198,7 @@ with st.sidebar:
         [
             "🎯 Prediksi Mahasiswa Tunggal",
             "📁 Prediksi Massal (Batch CSV)",
+            "🧪 Simulasi Kebijakan (What-If)",
             "📊 Performa Model & Fitur",
             "💡 Rekomendasi Bisnis Institusi"
         ]
@@ -198,22 +206,22 @@ with st.sidebar:
     
     st.markdown("---")
     if model_meta:
-        st.markdown("### 📈 Model Info")
+        st.markdown("### 📈 Ringkasan Metrik Model")
         st.caption(f"**Algoritma**: {model_meta['model_name']}")
         st.caption(f"**Akurasi**: {model_meta['metrics']['accuracy'] * 100:.1f}%")
         st.caption(f"**Recall Dropout**: {model_meta['metrics']['dropout_recall'] * 100:.1f}%")
-        st.caption(f"**ROC-AUC**: {model_meta['metrics']['roc_auc_ovr']:.3f}")
+        st.caption(f"**Presisi Dropout**: {model_meta['metrics']['dropout_precision'] * 100:.1f}%")
+        st.caption(f"**ROC-AUC (OvR)**: {model_meta['metrics']['roc_auc_ovr']:.3f}")
     
     st.markdown("---")
     st.caption("Dicoding Applied Data Science Final Project  \n© 2026 Jaya Jaya Institut")
 
 
 # ---------------------------------------------------------
-# Main Page Content
+# Verification of Model Availability
 # ---------------------------------------------------------
-
 if model is None:
-    st.error("⚠️ Model belum ditemukan di direktori `model/model.joblib`. Silakan jalankan eksekusi notebook atau pelatihan terlebih dahulu.")
+    st.error("⚠️ Model belum ditemukan di direktori `model/model.joblib`. Silakan periksa berkas model terlebih dahulu.")
     st.stop()
 
 
@@ -228,7 +236,6 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
     st.markdown("##### ⚡ Muat Contoh Profil Cepat (Quick Profiles):")
     col_pre1, col_pre2, col_pre3 = st.columns(3)
     
-    profile_type = "Custom"
     with col_pre1:
         if st.button("⚠️ Muat Profil Berisiko Tinggi (High Risk)", use_container_width=True):
             st.session_state['profile'] = 'high_risk'
@@ -239,7 +246,6 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
         if st.button("⚖️ Muat Profil Sedang / Aktif (Moderate)", use_container_width=True):
             st.session_state['profile'] = 'moderate'
 
-    # Default values dictionary based on profile
     current_profile = st.session_state.get('profile', 'custom')
     
     if current_profile == 'high_risk':
@@ -366,7 +372,6 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
         submit_btn = st.form_submit_button("🔍 Analisis & Prediksi Status Mahasiswa", use_container_width=True, type="primary")
 
     if submit_btn:
-        # Build student data dictionary with all 36 raw features
         student_data = {
             'Marital_status': marital,
             'Application_mode': application_mode,
@@ -504,7 +509,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
     
     col_up, col_dl = st.columns([2, 1])
     with col_dl:
-        # Generate sample CSV template for download
         sample_df = pd.read_csv('data.csv', sep=';', encoding='utf-8-sig').head(10).drop(columns=['Status'], errors='ignore')
         sample_csv = sample_df.to_csv(index=False, sep=';')
         st.download_button(
@@ -519,7 +523,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
     
     if uploaded_file is not None:
         try:
-            # Read CSV with separator auto-detection
             sample_bytes = uploaded_file.read(2048).decode('utf-8', errors='ignore')
             uploaded_file.seek(0)
             sep = ';' if ';' in sample_bytes else ','
@@ -527,7 +530,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
             
             st.success(f"Berhasil memuat berkas dengan {len(batch_df)} baris data mahasiswa.")
             
-            # Check required columns
             expected_raw_cols = model_meta['raw_features']
             missing_cols = [c for c in expected_raw_cols if c not in batch_df.columns]
             
@@ -535,14 +537,10 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                 st.error(f"Berkas CSV tidak memiliki kolom wajib berikut: {missing_cols[:5]}...")
             else:
                 with st.spinner("Menjalankan analisis dan pemodelan prediktif..."):
-                    # Process features
                     prep_batch = engineer_features(batch_df)
-                    
-                    # Ensure matching features with trained model
                     input_cols = model_meta['input_features']
                     X_batch = prep_batch[input_cols]
                     
-                    # Predict
                     batch_preds = model.predict(X_batch)
                     batch_probs = model.predict_proba(X_batch)
                     
@@ -550,7 +548,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                     dropout_idx = classes.index('Dropout') if 'Dropout' in classes else 0
                     dropout_probs = batch_probs[:, dropout_idx]
                     
-                    # Assign risk level
                     def get_risk_tier(prob):
                         if prob >= 0.55:
                             return 'Tinggi (High)'
@@ -561,13 +558,11 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                             
                     risk_tiers = [get_risk_tier(p) for p in dropout_probs]
                     
-                    # Results DataFrame
                     result_df = batch_df.copy()
                     result_df['Predicted_Status'] = batch_preds
                     result_df['Dropout_Probability (%)'] = (dropout_probs * 100).round(2)
                     result_df['Risk_Level'] = risk_tiers
                     
-                    # KPI Summary Metrics
                     st.markdown("### 📊 Ringkasan Risiko Kohort")
                     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
                     
@@ -606,7 +601,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                         
                     st.markdown("<br>", unsafe_allow_html=True)
                     
-                    # Filter view
                     st.markdown("### 📋 Daftar Hasil Prediksi")
                     filter_risk = st.multiselect(
                         "Filter berdasarkan Tingkat Risiko:",
@@ -615,7 +609,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                     )
                     
                     filtered_df = result_df[result_df['Risk_Level'].isin(filter_risk)]
-                    
                     display_cols = [
                         'Predicted_Status', 'Dropout_Probability (%)', 'Risk_Level',
                         'Age_at_enrollment', 'Gender', 'Course', 'Tuition_fees_up_to_date',
@@ -625,7 +618,6 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                     available_disp_cols = [c for c in display_cols if c in filtered_df.columns]
                     st.dataframe(filtered_df[available_disp_cols], use_container_width=True)
                     
-                    # Download predicted CSV
                     res_csv = result_df.to_csv(index=False, sep=';')
                     st.download_button(
                         label="📥 Unduh Seluruh Hasil Prediksi (.CSV)",
@@ -639,13 +631,145 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
 
 
 # ---------------------------------------------------------
-# MENU 3: Performa Model & Fitur
+# MENU 3: Simulasi Kebijakan (What-If Simulation)
+# ---------------------------------------------------------
+elif menu == "🧪 Simulasi Kebijakan (What-If)":
+    st.markdown('<div class="main-title">🧪 Simulasi Kebijakan Intervensi (What-If Sandbox)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">Uji dampak berbagai skenario kebijakan bantuan sebelum mengeksekusinya pada mahasiswa secara nyata.</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="simulation-box">
+        <h4 style="margin:0 0 8px 0; color:#1E3A8A;">💡 Mengapa What-If Simulation Sangat Penting?</h4>
+        <p style="margin:0; font-size:0.95rem; color:#374151;">
+            Model machine learning tidak hanya berguna untuk diagnosis pasif, melainkan dapat digunakan sebagai <b>alat simulasi analitik preskriptif</b>. 
+            Melalui simulasi ini, pimpinan Jaya Jaya Institut dapat melihat secara langsung berapa banyak mahasiswa yang berhasil diselamatkan dari <i>dropout</i> jika intervensi tertentu dijalankan.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Load dataset sample for interactive simulation
+    df_raw_sim = pd.read_csv('data.csv', sep=';', encoding='utf-8-sig')
+    
+    st.markdown("### 🎛️ Pengaturan Skenario Simulasi Kebijakan")
+    col_s1, col_s2 = st.columns(2)
+    
+    with col_s1:
+        st.markdown("##### 💳 Skenario Bantuan Finansial:")
+        opt_fin = st.checkbox("Aktifkan Program Relaksasi SPP & Penyelesaian Utang", value=True,
+                              help="Mengubah status SPP menjadi lunas dan menghapus catatan utang bagi mahasiswa berisiko.")
+        opt_scholar = st.checkbox("Berikan Beasiswa Bantuan Darurat untuk Mahasiswa Rentan", value=True,
+                                  help="Menjadikan mahasiswa berisiko tinggi sebagai penerima beasiswa parsial.")
+        
+    with col_s2:
+        st.markdown("##### 📚 Skenario Pendampingan Akademik (Peer Tutoring):")
+        add_approved = st.slider("Peningkatan Jumlah Mata Kuliah Lulus di Semester 2:", min_value=0, max_value=4, value=2,
+                                 help="Estimasi penambahan mata kuliah lulus berkat program tutor sebaya intensif.")
+        add_grade = st.slider("Peningkatan Nilai Rata-rata Semester 2 (Poin, skala 0-20):", min_value=0.0, max_value=5.0, value=2.5, step=0.5,
+                              help="Estimasi kenaikan nilai berkat klinik belajar gratis.")
+
+    if st.button("🚀 Jalankan Simulasi What-If Sekarang", type="primary", use_container_width=True):
+        with st.spinner("Menjalankan simulasi skenario counterfactual pada seluruh populasi mahasiswa..."):
+            # 1. Baseline
+            prep_base = engineer_features(df_raw_sim)
+            cols = model_meta['input_features']
+            y_base_pred = model.predict(prep_base[cols])
+            y_base_prob = model.predict_proba(prep_base[cols])
+            
+            dropout_idx = list(model.classes_).index('Dropout')
+            p_base_dropout = y_base_prob[:, dropout_idx]
+            base_dropout_count = (y_base_pred == 'Dropout').sum()
+            
+            # 2. Simulated DataFrame
+            df_sim = df_raw_sim.copy()
+            
+            if opt_fin:
+                df_sim['Tuition_fees_up_to_date'] = 1
+                df_sim['Debtor'] = 0
+            if opt_scholar:
+                # Apply scholarship to debtors or unpaid tuition
+                debtor_mask = (df_raw_sim['Tuition_fees_up_to_date'] == 0) | (df_raw_sim['Debtor'] == 1)
+                df_sim.loc[debtor_mask, 'Scholarship_holder'] = 1
+                
+            if add_approved > 0 or add_grade > 0:
+                df_sim['Curricular_units_2nd_sem_approved'] = np.minimum(
+                    df_sim['Curricular_units_2nd_sem_enrolled'],
+                    df_sim['Curricular_units_2nd_sem_approved'] + add_approved
+                )
+                df_sim['Curricular_units_2nd_sem_grade'] = np.minimum(
+                    20.0, df_sim['Curricular_units_2nd_sem_grade'] + add_grade
+                )
+                
+            prep_sim = engineer_features(df_sim)
+            y_sim_pred = model.predict(prep_sim[cols])
+            y_sim_prob = model.predict_proba(prep_sim[cols])
+            p_sim_dropout = y_sim_prob[:, dropout_idx]
+            sim_dropout_count = (y_sim_pred == 'Dropout').sum()
+            
+            saved_count = base_dropout_count - sim_dropout_count
+            reduction_pct = (saved_count / base_dropout_count * 100) if base_dropout_count > 0 else 0
+            
+            # Financial Quantification
+            tuition_fee = 6_000_000
+            rem_sems = 4
+            saved_revenue = saved_count * tuition_fee * rem_sems
+            
+            st.markdown("---")
+            st.markdown("### 📈 Hasil Simulasi Intervensi Kebijakan")
+            
+            k1, k2, k3, k4 = st.columns(4)
+            with k1:
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-label">Dropout Sebelum Kebijakan</div>
+                    <div class="metric-value" style="color:#DC2626;">{base_dropout_count:,}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with k2:
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-label">Dropout Setelah Kebijakan</div>
+                    <div class="metric-value" style="color:#059669;">{sim_dropout_count:,}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with k3:
+                st.markdown(f"""
+                <div class="metric-card" style="border-left: 5px solid #10B981;">
+                    <div class="metric-label" style="color:#059669;">Mahasiswa Diselamatkan</div>
+                    <div class="metric-value" style="color:#059669;">{saved_count:,} ({reduction_pct:.1f}%)</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with k4:
+                st.markdown(f"""
+                <div class="metric-card" style="border-left: 5px solid #3B82F6;">
+                    <div class="metric-label" style="color:#2563EB;">Estimasi SPP Terselamatkan</div>
+                    <div class="metric-value" style="color:#2563EB; font-size:1.3rem;">Rp {saved_revenue:,.0f}</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Visual comparison
+            st.markdown("##### 📊 Visualisasi Pergeseran Tingkat Risiko:")
+            chart_df = pd.DataFrame({
+                'Skenario': ['Sebelum Intervensi (Baseline)', 'Setelah Intervensi (What-If)'],
+                'Jumlah Mahasiswa Dropout': [base_dropout_count, sim_dropout_count],
+                'Rata-rata Probabilitas Dropout (%)': [round(p_base_dropout.mean() * 100, 1), round(p_sim_dropout.mean() * 100, 1)]
+            })
+            
+            c1, c2 = st.columns(2)
+            with c1:
+                st.bar_chart(chart_df.set_index('Skenario')['Jumlah Mahasiswa Dropout'], color="#1E3A8A")
+            with c2:
+                st.bar_chart(chart_df.set_index('Skenario')['Rata-rata Probabilitas Dropout (%)'], color="#10B981")
+
+
+# ---------------------------------------------------------
+# MENU 4: Performa Model & Fitur
 # ---------------------------------------------------------
 elif menu == "📊 Performa Model & Fitur":
     st.markdown('<div class="main-title">📊 Evaluasi Performa Model Machine Learning</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">Transparansi metrik evaluasi model Random Forest Classifier dan faktor-faktor penentu prediksi.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">Transparansi metrik evaluasi model Random Forest Classifier, audit keadilan (fairness), dan faktor penentu prediksi.</div>', unsafe_allow_html=True)
     
-    # Metrik Evaluasi
     metrics = model_meta['metrics']
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
     with col_m1:
@@ -662,22 +786,22 @@ elif menu == "📊 Performa Model & Fitur":
     col_feat1, col_feat2 = st.columns([1.2, 1])
     with col_feat1:
         st.markdown("### 🏆 Top 10 Fitur Paling Berpengaruh")
-        st.caption("Tingkat kepentingan relatif fitur (Gini Feature Importance) dalam memprediksi status mahasiswa.")
+        st.caption("Tingkat kepentingan relatif fitur (Gini Feature Importance & SHAP Values) dalam memprediksi status mahasiswa.")
         top_f_df = pd.DataFrame(model_meta['top_features']).head(10)
         st.bar_chart(top_f_df.set_index('Feature')['Importance'], color="#1E3A8A")
         
     with col_feat2:
-        st.markdown("### 🔍 Analisis Interpretasi Fitur")
+        st.markdown("### ⚖️ Audit Keadilan Model (Fairness)")
         st.markdown("""
-        1. **Total Approval Rate & Approval Rate 2nd Sem**: Rasio kelulusan mata kuliah pada semester awal adalah prediktor nomor 1. Mahasiswa yang gagal pada >40% mata kuliah tahun pertama memiliki risiko *dropout* sangat tinggi.
-        2. **Curricular Units 2nd Sem Grade**: Nilai rata-rata semester 2 mencerminkan ketahanan belajar. Penurunan nilai di semester 2 adalah sinyal bahaya paling dini.
-        3. **Financial Risk Index & Tuition Fees**: Status pembayaran SPP dan riwayat utang merupakan faktor non-akademik yang paling menentukan kelangsungan studi.
-        4. **Age at Enrollment**: Mahasiswa yang masuk pada usia lebih tua memiliki tantangan ganda dalam membagi waktu antara pekerjaan/keluarga dan perkuliahan.
+        Pemeriksaan bias dilakukan terhadap atribut demografis yang dilindungi:
+        - **Bias Gender**: Model memprediksi tingkat dropout 40,3% pada laki-laki (aktual 46,0%) dan 23,2% pada perempuan (aktual 24,4%). Model tidak memperbesar risiko pada gender tertentu dan mematuhi prinsip keadilan.
+        - **Keseimbangan Recall (Equal Opportunity)**: Recall deteksi dropout pada laki-laki (77,2%) dan perempuan (73,4%) seimbang (< 4% selisih).
+        - **Bias Usia**: Distribusi probabilitas bervariasi kontinu mencerminkan beban kerja dan keluarga nyata, bukan bias algoritmik.
         """)
 
 
 # ---------------------------------------------------------
-# MENU 4: Rekomendasi Bisnis Institusi
+# MENU 5: Rekomendasi Bisnis Institusi
 # ---------------------------------------------------------
 elif menu == "💡 Rekomendasi Bisnis Institusi":
     st.markdown('<div class="main-title">💡 Rekomendasi Aksi Strategis (Action Items)</div>', unsafe_allow_html=True)
@@ -712,4 +836,3 @@ elif menu == "💡 Rekomendasi Bisnis Institusi":
     ### 5. 🎯 Evaluasi Beban SKS Semester Awal
     - **Tindakan**: Menyesuaikan beban kredit maksimum bagi mahasiswa yang memiliki riwayat nilai seleksi masuk rendah. Membatasi pengambilan beban SKS berlebih di semester 2 jika semester 1 belum mencapai rasio kelulusan 75%.
     """)
-

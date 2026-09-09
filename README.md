@@ -1,38 +1,52 @@
-# Proyek Akhir: Menyelesaikan Permasalahan Institusi Pendidikan - Jaya Jaya Institut
+# Proyek Akhir Penerapan Data Science: Menyelesaikan Permasalahan Institusi Pendidikan - Jaya Jaya Institut
 
-## Business Understanding
-**Jaya Jaya Institut** merupakan salah satu institusi perguruan tinggi swasta terkemuka yang telah beroperasi sejak tahun 2000. Selama lebih dari dua dekade, institusi ini telah berhasil meluluskan ribuan alumni yang sukses di berbagai bidang industri. Namun, terlepas dari rekam jejak akademiknya yang gemilang, Jaya Jaya Institut menghadapi tantangan struktural yang signifikan, yaitu **tingginya proporsi mahasiswa yang mengalami putus studi (*dropout*)**.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.7%2B-orange.svg)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.31%2B-red.svg)](https://streamlit.io/)
+[![SHAP](https://img.shields.io/badge/SHAP-0.49%2B-brightgreen.svg)](https://shap.readthedocs.io/)
+[![CRISP-DM](https://img.shields.io/badge/Methodology-CRISP--DM-purple.svg)]()
 
-Tingginya angka *dropout* bukan sekadar masalah administratif internal, melainkan ancaman langsung terhadap keberlangsungan dan reputasi perguruan tinggi:
-1. **Dampak Finansial**: Kehilangan pendapatan berkelanjutan dari uang kuliah (SPP/Tuition Fees) serta akumulasi piutang mahasiswa yang tidak tertagih.
-2. **Efisiensi Sumber Daya**: Pemborosan kapasitas ruang kelas, alokasi rasio beban dosen, dan fasilitas laboratorium yang telah dianggarkan untuk kapasitas penuh.
-3. **Reputasi dan Akreditasi**: Rasio retensi dan kelulusan mahasiswa merupakan metrik vital dalam akreditasi perguruan tinggi di tingkat nasional maupun internasional.
-4. **Dampak Sosial bagi Mahasiswa**: Mahasiswa yang putus kuliah menghadapi hambatan prospek karier dan sering kali menanggung beban utang pendidikan tanpa memiliki ijazah formal.
+---
+
+## 📌 Executive Summary
+**Jaya Jaya Institut** merupakan institusi pendidikan tinggi swasta terkemuka yang telah berdiri sejak tahun 2000. Meskipun memiliki reputasi mencetak ribuan lulusan berprestasi, institusi ini menghadapi masalah kritis berupa **tingginya rasio mahasiswa putus studi (*dropout rate*) mencapai 32,1%**. Tingkat *dropout* yang tinggi menimbulkan dampak finansial langsung (kehilangan pendapatan SPP/biaya kuliah dan utang tak tertagih), inefisiensi alokasi dosen/fasilitas, serta ancaman terhadap akreditasi dan reputasi kampus.
+
+Proyek Data Science ini menerapkan metodologi terstruktur **CRISP-DM** (*Cross-Industry Standard Process for Data Mining*) untuk membangun **Sistem Deteksi Dini & Retensi Mahasiswa (*Student Retention & Early Warning System*)**. Solusi mencakup pemodelan machine learning prediktif dengan **Random Forest Classifier (Akurasi 77,1%, Recall Dropout 75,7%, ROC-AUC 0,892)**, interpretasi mendalam berbasis **SHAP Values & Feature Importance**, **Audit Keadilan Algoritmik (*Bias Checking*)**, serta **Simulasi Kebijakan Preskriptif (*What-If Simulation*)** yang membuktikan potensi penyelamatan **37,1% mahasiswa berisiko putus studi** dengan proyeksi penyelamatan pendapatan SPP institusi mencapai **Rp 11,5 Miliar**.
+
+---
+
+## 🏢 Business Understanding
+
+### Latar Belakang Bisnis
+Pada era persaingan perguruan tinggi modern, retensi mahasiswa (*student retention rate*) merupakan salah satu indikator vital dalam akreditasi institusi, keberlanjutan anggaran operasional, dan kepuasan pemangku kepentingan. Jaya Jaya Institut mengalami tantangan di mana sepertiga dari mahasiswa baru gagal menuntaskan studi mereka hingga tahap kelulusan (*graduation*). 
 
 ### Permasalahan Bisnis
-Berdasarkan investigasi dan diskusi manajerial, permasalahan pokok yang dihadapi oleh Jaya Jaya Institut meliputi:
-1. **Tingkat Dropout yang Sangat Tinggi**: Analisis data historis menunjukkan sebanyak **32,1% (1.421 dari 4.424 mahasiswa)** mengalami *dropout*, suatu rasio yang berada jauh di atas ambang batas toleransi institusi pendidikan tinggi yang sehat.
-2. **Ketiadaan Sistem Deteksi Dini (*Early Warning System*)**: Manajemen kampus belum memiliki instrumen berbasis data yang mampu mendeteksi indikasi kerentanan mahasiswa di semester-semester awal sebelum mereka mengambil keputusan resmi untuk mengundurkan diri.
-3. **Ketidakjelasan Faktor Pemicu (*Root Causes*)**: Belum tersedianya pemahaman mendalam mengenai faktor utama apa saja (apakah kendala finansial, latar belakang demografis, atau penurunan performa akademik) yang paling berpengaruh terhadap keputusan putus studi.
-4. **Intervensi yang Terlambat**: Upaya konseling atau bantuan yang dilakukan pihak kampus umumnya terjadi saat mahasiswa sudah menumpuk tunggakan biaya atau sudah berhenti menghadiri perkuliahan.
+Berdasarkan investigasi manajerial bersama pimpinan akademik dan bagian keuangan kampus, diidentifikasi empat permasalahan bisnis pokok:
+1. **Tingkat Dropout Sangat Tinggi**: Analisis historis menunjukkan **32,1% (1.421 dari 4.424 mahasiswa)** mengalami *dropout*.
+2. **Ketiadaan Sistem Peringatan Dini (*Early Warning System*)**: Pihak kampus belum memiliki instrumen analitik untuk mendeteksi sinyal awal penurunan performa akademik atau kendala finansial sebelum mahasiswa resmi mengundurkan diri.
+3. **Ketidakpastian Faktor Pendorong (*Root Causes*)**: Belum ada verifikasi empiris mengenai apakah faktor akademik (SKS lulus/nilai) atau faktor sosioekonomi (tunggakan SPP/utang) yang paling dominan memicu *dropout*.
+4. **Kebutuhan Evaluasi Keadilan & Pengujian Kebijakan**: Manajemen memerlukan kepastian bahwa model tidak bias terhadap gender/usia serta membutuhkan simulasi dampak terukur sebelum mengeksekusi program beasiswa atau tutorial bantuan.
 
-### Cakupan Proyek
-Untuk mengatasi permasalahan bisnis tersebut, proyek Data Science ini mencakup tahapan *end-to-end* yang sistematis:
-- **Analisis Data Eksploratif (EDA)**: Membedah profil mahasiswa dari aspek demografis, sosioekonomi, riwayat seleksi masuk, hingga kinerja akademik semester 1 dan 2.
-- **Pembersihan & Rekayasa Fitur (*Feature Engineering*)**: Merancang metrik-metrik analitis baru (seperti *Total Approval Rate*, *Grade Progression*, dan *Financial Risk Index*) untuk meningkatkan daya beda model.
-- **Pemodelan Machine Learning**: Membangun, mengomparasikan, dan melakukan *hyperparameter tuning* pada beberapa algoritma klasifikasi (*Logistic Regression*, *Decision Tree*, *Random Forest*, dan *Gradient Boosting*).
-- **Evaluasi Model Komprehensif**: Menguji model menggunakan metrik *Accuracy*, *Precision*, *Recall*, *F1-Score (Macro & Weighted)*, *Confusion Matrix*, dan *Multi-class ROC-AUC*.
-- **Analisis Kepentingan Fitur (*Feature Importance*)**: Mengidentifikasi variabel-variabel kunci pemicu *dropout* guna menghasilkan dasar pengambilan keputusan manajerial.
-- **Pengembangan Prototype Web (Streamlit)**: Membangun aplikasi web interaktif (`app.py`) yang siap digunakan oleh staf akademik dan konselor untuk melakukan prediksi risiko baik secara individu maupun massal (*batch CSV*).
+### Cakupan Proyek (*Project Scope*)
+1. **Exploratory Data Analysis (EDA)**: Membedah korelasi demografi, sosioekonomi, jalur seleksi, dan performa akademik semester 1–2 terhadap status mahasiswa.
+2. **Data Preparation & Feature Engineering**: Merancang metrik performa domain pendidikan seperti rasio kelulusan semester (`Approval_rate_1st`, `Approval_rate_2nd`), rasio kelulusan kumulatif tahun pertama (`Total_approval_rate`), progresi nilai (`Grade_progression`), dan indeks komposit finansial (`Financial_risk_index`).
+3. **Machine Learning Modeling**: Membandingkan 4 model klasifikasi (*Logistic Regression*, *Decision Tree*, *Random Forest*, *Gradient Boosting*) dengan 5-Fold Stratified Cross-Validation dan *GridSearchCV*.
+4. **Model Evaluation & SHAP Analysis**: Menguji model dengan metrik *Accuracy*, *Precision*, *Recall*, *F1-Score*, *ROC-AUC*, *Confusion Matrix*, dan *SHAP TreeExplainer*.
+5. **Model Fairness & Bias Checking**: Mengaudit keadilan model pada atribut sensitif (*Gender* dan *Age at enrollment*) menggunakan *Disparate Impact Ratio*, *Demographic Parity*, dan *Equal Opportunity (Recall Parity)*.
+6. **What-If Policy Simulation**: Mensimulasikan skenario bantuan finansial dan tutorial akademik pada data uji untuk menguantifikasi penurunan *dropout* dan nilai ekonomi yang terselamatkan.
+7. **Production Prototype Deployment**: Membangun aplikasi web interaktif berbasis Streamlit (`app.py`) dengan fitur prediksi tunggal (termasuk *Quick Presets*), prediksi massal (*Batch CSV*), dan *What-If Sandbox*.
 
 ### Persiapan
 
 #### Sumber Data
-Dataset yang digunakan merupakan data resmi mahasiswa **Jaya Jaya Institut** yang mencakup **4.424 data mahasiswa** dengan **36 fitur prediktor** dan **1 kolom target** (`Status`: *Dropout*, *Enrolled*, *Graduate*).
-- Sumber Dataset: `data.csv` (repositori resmi Dicoding: `https://raw.githubusercontent.com/dicodingacademy/dicoding_dataset/main/students_performance/data.csv`)
+Dataset diperoleh dari repositori resmi Dicoding untuk studi kasus Jaya Jaya Institut:
+- **Nama Berkas**: `data.csv`
+- **Tautan Unduh**: [Dicoding Students Performance Dataset](https://raw.githubusercontent.com/dicodingacademy/dicoding_dataset/main/students_performance/data.csv)
+- **Dimensi**: 4.424 baris data mahasiswa dan 37 kolom (36 fitur prediktor + 1 target `Status`).
+- **Kualitas Data**: 0 *missing values* dan 0 baris duplikat.
 
 #### Setup Environment
-Proyek ini dikembangkan menggunakan Python 3.10+ (atau Python 3.12). Ikuti langkah-langkah berikut untuk menyiapkan environment:
+Proyek ini kompatibel dengan Python 3.10+ (atau Python 3.12). Ikuti langkah-langkah berikut:
 
 1. **Clone Repositori**:
    ```bash
@@ -41,7 +55,7 @@ Proyek ini dikembangkan menggunakan Python 3.10+ (atau Python 3.12). Ikuti langk
    ```
 
 2. **Buat dan Aktifkan Virtual Environment**:
-   - **Windows**:
+   - **Windows (PowerShell)**:
      ```powershell
      python -m venv venv
      .\venv\Scripts\activate
@@ -59,34 +73,45 @@ Proyek ini dikembangkan menggunakan Python 3.10+ (atau Python 3.12). Ikuti langk
 
 ---
 
-## Business Dashboard
-Sesuai dengan ketentuan dan batasan proyek, konfigurasi dan implementasi Business Intelligence Dashboard eksternal (menggunakan tools seperti Metabase, Tableau, Looker, atau Power BI) dikelola dan diatur secara mandiri oleh tim internal Jaya Jaya Institut.
+## 📊 Business Dashboard
+Sesuai dengan ketentuan dan batasan proyek, Business Intelligence (BI) Dashboard eksternal (Metabase, Tableau, Looker, atau Power BI) dikonfigurasi dan dikelola secara terpisah dan mandiri oleh pengguna/tim internal Jaya Jaya Institut.
 
-- **Tautan Dashboard**: *[Placeholder link dashboard BI - akan ditambahkan oleh pengguna]*
-- **Tinjauan Dashboard**: Visualisasi analitik komparatif performa akademik, retensi fakultas, dan ringkasan metrik kohort mahasiswa dapat diintegrasikan langsung pada platform BI terkait.
+- **Tautan Dashboard BI**: *[Placeholder Tautan Dashboard - Dikelola Mandiri oleh Pengguna]*
+- **Tinjauan Dashboard**: Visualisasi analitik makro kohort dan pemantauan fakultas dapat diintegrasikan langsung pada platform BI institusi terkait. Seluruh analisis analitik preskriptif dan model machine learning telah diakomodasi secara komprehensif pada aplikasi prototype Streamlit (`app.py`).
 
 ---
 
-## Menjalankan Sistem Machine Learning
+## 💻 Menjalankan Sistem Machine Learning
 
-### Cara Menjalankan Prototype Secara Lokal
-Aplikasi prototype deteksi dini risiko mahasiswa dibangun menggunakan framework **Streamlit**. Ikuti langkah-langkah berikut untuk menjalankannya:
+### Menjalankan Prototype Streamlit Secara Lokal
+Aplikasi prototype deteksi dini dan simulasi kebijakan dapat dijalankan secara lokal dengan langkah mudah:
 
 1. Pastikan virtual environment telah aktif dan dependensi terpasang.
-2. Jalankan perintah Streamlit dari direktori utama proyek:
+2. Jalankan perintah Streamlit dari direktori proyek:
    ```bash
    streamlit run app.py
    ```
-3. Buka peramban (browser) dan akses alamat lokal:
+3. Buka peramban (browser) dan akses alamat:
    ```
    Local URL: http://localhost:8501
    ```
 
-### Fitur Utama Aplikasi Prototype:
-- **🎯 Prediksi Mahasiswa Tunggal**: Formulir interaktif lengkap dengan fitur **Preset Quick Profiles** (Profil Risiko Tinggi, Profil Sedang, Profil Mahasiswa Berprestasi) untuk evaluasi instan. Dilengkapi *gauge progress bar* probabilitas *dropout* dan kotak rekomendasi intervensi personal otomatis.
-- **📁 Prediksi Massal (*Batch Assessment*)**: Unggah berkas CSV kohort mahasiswa untuk memetakan distribusi risiko secara serentak, dilengkapi ringkasan KPI kohort dan tombol unduh laporan hasil prediksi (.CSV). Tersedia pula tombol untuk mengunduh template CSV sampel.
-- **📊 Performa Model & Fitur**: Transparansi metrik evaluasi model (Akurasi, Presisi, Recall, ROC-AUC) dan visualisasi interaktif *Top 10 Feature Importance*.
-- **💡 Rekomendasi Bisnis Institusi**: Panduan taktis dan strategis bagi pimpinan perguruan tinggi dalam mereduksi tingkat putus studi.
+### Fitur Unggulan Aplikasi Prototype (`app.py`):
+- **🎯 Prediksi Mahasiswa Tunggal**:
+  - Tombol **Quick Presets** untuk memuat profil instan: ⚠️ *High Risk Student*, 🎓 *High Performing Student*, dan ⚖️ *Moderate Student*.
+  - Form terstruktur dalam 4 tab (Demografis, Finansial, Akademik Semester 1, dan Akademik Semester 2).
+  - Kartu hasil status prediksi dengan *color-coded badge*, indikator probabilitas risiko per kelas, dan **Rekomendasi Tindakan Intervensi Otomatis** yang disesuaikan secara personal dengan profil mahasiswa.
+- **📁 Prediksi Massal (*Batch CSV Assessment*)**:
+  - Fasilitas unggah file CSV untuk menilai risiko seluruh angkatan mahasiswa secara serentak.
+  - Kartu KPI ringkasan kohort (Total Mahasiswa, Risiko Tinggi, Sedang, Rendah).
+  - Tombol unduh laporan hasil prediksi (.CSV) dan tombol unduh template CSV sampel.
+- **🧪 Simulasi Kebijakan (What-If Sandbox)**:
+  - Antarmuka interaktif untuk menguji efektivitas kebijakan: simulasi restrukturisasi SPP, beasiswa darurat, dan tutor sebaya.
+  - Menghitung secara instan jumlah mahasiswa yang terselamatkan dan proyeksi pendapatan SPP yang terselamatkan.
+- **📊 Performa Model & Audit Keadilan**:
+  - Menampilkan metrik evaluasi model (Akurasi, Presisi, Recall, ROC-AUC), grafik *Top 10 Feature Importance*, dan ringkasan audit keadilan (*Fairness Checking*).
+- **💡 Rekomendasi Bisnis Institusi**:
+  - Panduan implementasi manajerial bagi jajaran pimpinan perguruan tinggi.
 
 ### Tautan Deployment Cloud
 Aplikasi prototype ini dapat diakses secara daring melalui Streamlit Community Cloud:
@@ -94,47 +119,110 @@ Aplikasi prototype ini dapat diakses secara daring melalui Streamlit Community C
 
 ---
 
-## Conclusion
+## 📈 Model Performance & Evaluation Summary
 
-Berdasarkan rangkaian analisis data eksploratif (EDA), rekayasa fitur, dan evaluasi pemodelan *machine learning*, diperoleh kesimpulan strategis sebagai berikut:
+### Perbandingan Model Klasifikasi (5-Fold Stratified Cross-Validation & Test Set)
 
-1. **Akar Permasalahan Utama (*Core Problem Drivers*)**:
-   - **Momentum Akademik Tahun Pertama adalah Penentu Utama**: Fitur rasio kelulusan mata kuliah (`Total_approval_rate`, `Approval_rate_2nd`, dan `Approval_rate_1st`) serta nilai semester 2 (`Curricular_units_2nd_sem_grade`) menyumbang lebih dari **30% pengaruh total** dalam memprediksi *dropout*. Mahasiswa yang gagal meluluskan lebih dari 40% mata kuliah pada semester 1 atau 2 memiliki kecenderungan putus studi yang eksponensial.
-   - **Tunggakan Finansial sebagai Titik Kritis**: Mahasiswa yang menunggak pembayaran SPP (`Tuition_fees_up_to_date = 0`) memiliki angka *dropout* mencapai **86,5%**, berbanding terbalik dengan mahasiswa yang SPP-nya lancar (23,8%). Hal ini menunjukkan bahwa banyak mahasiswa terpaksa *dropout* bukan murni karena ketidakmampuan akademis, melainkan keterbatasan finansial yang tak teratasi.
-   - **Efek Protektif Beasiswa**: Penerima beasiswa mencatatkan tingkat kelulusan **76,3%** dan tingkat *dropout* hanya **12,9%**. Beasiswa terbukti menjadi instrumen retensi yang sangat kuat.
-   - **Faktor Usia dan Gender**: Mahasiswa yang mendaftar pada usia matang (> 25 tahun) memiliki tingkat *dropout* di atas 50%, dan mahasiswa laki-laki memiliki risiko *dropout* lebih tinggi (45,1%) dibanding perempuan (25,1%).
+| Model Algoritma | Mean CV Accuracy | Test Accuracy | Macro F1-Score | Dropout Recall | Dropout Precision | ROC-AUC (OvR) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Logistic Regression (Baseline)** | 76,5% | 76,7% | 0,677 | 73,6% | 78,2% | 0,862 |
+| **Decision Tree** | 76,3% | 75,3% | 0,683 | 70,8% | 76,1% | 0,812 |
+| **Gradient Boosting** | 77,6% | 77,0% | 0,702 | 73,2% | 80,3% | 0,885 |
+| **Random Forest (Tuned Final)** 🏆 | **77,4%** | **77,1%** | **0,715** | **75,7%** | **83,0%** | **0,892** |
 
-2. **Kinerja Model Machine Learning**:
-   - Model **Random Forest Classifier** yang telah dituning dengan pembobotan kelas (*balanced subsample*) berhasil mencapai performa yang sangat solid:
-     - **Akurasi Keseluruhan**: **77,1%**
-     - **Recall Kelas Dropout**: **75,7%** (mampu mendeteksi lebih dari 3 dari setiap 4 mahasiswa yang berisiko putus studi).
-     - **Presisi Kelas Dropout**: **83,0%** (meminimalkan alarm palsu sehingga alokasi bantuan tepat sasaran).
-     - **ROC-AUC (One-vs-Rest)**: **0,892** (daya diskriminasi probabilitas yang sangat andal).
-
-3. **Jawaban terhadap Kebutuhan Bisnis**:
-   Dengan mengintegrasikan model ini ke dalam alur operasional akademik melalui prototype Streamlit, Jaya Jaya Institut kini memiliki instrumen objektif berbasis data untuk melakukan intervensi proaktif pada semester 1 dan 2, jauh sebelum mahasiswa memutuskan untuk putus kuliah.
+*Model terbaik dipilih berdasarkan keseimbangan metrik Recall Dropout (75,7%) dan Presisi Dropout (83,0%) untuk memastikan intervensi tepat sasaran.*
 
 ---
 
-### Rekomendasi Action Items
-Guna menekan angka *dropout* secara signifikan dan mencapai target retensi mahasiswa jangka panjang, Jaya Jaya Institut disarankan untuk mengimplementasikan rekomendasi aksi berikut:
+## 🔍 Core Insights & Visual Interpretations
 
-1. **Implementasi Sistem Peringatan Dini Akademik (*Automated Early Warning System*)**:
-   - Menghubungkan model machine learning langsung ke Sistem Informasi Akademik (SIAKAD).
-   - Menghitung *Dropout Risk Score* secara otomatis segera setelah nilai Ujian Tengah Semester (UTS) dan Ujian Akhir Semester (UAS) semester 1 keluar.
-   - Sistem secara otomatis mengirimkan notifikasi kepada Dosen Pembimbing Akademik (DPA) untuk mahasiswa yang memiliki skor risiko > 50%.
+### 1. Temuan Utama EDA & Nilai SHAP (*SHapley Additive exPlanations*)
+- **Momentum Akademik Tahun Pertama adalah Prediktor No. 1**:
+  - Fitur rekayasa `Total_approval_rate` dan `Approval_rate_2nd` berkontribusi lebih dari **30% total importance**.
+  - Nilai SHAP menunjukkan bahwa rasio kelulusan mata kuliah $< 50\%$ pada tahun pertama secara dramatis melonjakkan probabilitas mahasiswa mengalami *Dropout*.
+  - Mahasiswa yang *Graduate* rata-rata meluluskan **6,2 mata kuliah** per semester, sedangkan mahasiswa *Dropout* rata-rata hanya meluluskan **1,9 mata kuliah** di semester 2.
+- **Tunggakan Finansial sebagai Faktor Pemicu Kritis**:
+  - Mahasiswa yang menunggak SPP (`Tuition_fees_up_to_date = 0`) memiliki angka *dropout* fantastis sebesar **86,5%**, berbanding terbalik dengan mahasiswa lunas (23,8%).
+  - Mahasiswa debitur (`Debtor = 1`) mengalami *dropout rate* **62,1%**. Fitur `Financial_risk_index` menempati peringkat krusial dalam SHAP summary plot.
+- **Efek Protektif Beasiswa**:
+  - Mahasiswa penerima beasiswa mencatatkan tingkat kelulusan **76,3%** dan hanya **12,9%** yang *dropout*. Beasiswa terbukti menjadi instrumen retensi mahasiswa paling ampuh.
+- **Faktor Usia & Gender**:
+  - Mahasiswa yang mendaftar pada usia matang ($> 25$ tahun) memiliki tingkat *dropout* di atas 50% karena beban kerja dan keluarga ganda.
+  - Mahasiswa laki-laki memiliki risiko *dropout* 45,1% berbanding perempuan 25,1%.
 
-2. **Skema Bantuan Finansial & Restrukturisasi SPP Fleksibel**:
-   - Mengingat korelasi fatal antara tunggakan SPP dan *dropout* (86,5%), perguruan tinggi perlu menerapkan kebijakan **skema cicilan biaya kuliah tanpa denda** dan penundaan pembayaran bersyarat bagi mahasiswa yang mengalami kesulitan ekonomi darurat.
-   - Mengalokasikan pos dana bantuan darurat (*emergency micro-grants*) atau beasiswa parsial bagi mahasiswa semester 1-2 yang berprestasi namun terancam kendala pembayaran SPP.
+### 2. Hasil Audit Keadilan Model (*Bias Checking*)
+Pemeriksaan keadilan (*fairness audit*) membuktikan bahwa model beroperasi secara adil dan bebas dari bias diskriminatif:
+- **Gender Fairness**: 
+  - Prediksi model (Laki-laki 40,3%, Perempuan 23,2%) berbanding lurus dengan data historis aktual (Laki-laki 46,0%, Perempuan 24,4%).
+  - Model sedikit lebih konservatif untuk laki-laki (tidak melebih-lebihkan risiko secara artifisial).
+  - *Recall Parity*: Recall deteksi *dropout* seimbang antara laki-laki (77,2%) dan perempuan (73,4%) dengan selisih $< 4\%$, mematuhi prinsip *Equal Opportunity*.
+- **Age Group Fairness**: Distribusi probabilitas bervariasi kontinu mencerminkan beban kredit dan nilai nyata, tanpa adanya diskriminasi usia sistemik.
 
-3. **Klinik Bimbingan Akademik & Program Tutorial Sebaya (*Peer Tutoring*)**:
-   - Membuka klinik belajar gratis khusus mata kuliah dasar yang memiliki tingkat ketidaklulusan (*failure rate*) tertinggi di setiap program studi (terutama di Fakultas Teknik dan Manajemen).
-   - Memasangkan mahasiswa berisiko dengan mentor mahasiswa tingkat atas berprestasi (*peer mentor*) untuk membantu adaptasi metode belajar perguruan tinggi.
+### 3. Hasil Simulasi Intervensi Kebijakan (*What-If Simulation*)
+Pengujian skenario intervensi pada kohort data uji (*unseen test set*, 885 mahasiswa):
+- **Baseline (Tanpa Intervensi)**: 259 mahasiswa diprediksi *Dropout*.
+- **Skenario A (Intervensi Finansial Saja)**: Menyelamatkan 42 mahasiswa (penurunan dropout 16,2%).
+- **Skenario B (Intervensi Akademik Saja - Peer Tutoring)**: Menyelamatkan 68 mahasiswa (penurunan dropout 26,3%).
+- **Skenario C (Intervensi Gabungan: Finansial + Akademik)**: Menyelamatkan **96 mahasiswa (penurunan dropout sebesar 37,1%)**!
+- **Kuantifikasi Dampak Ekonomi Institusi**:
+  - Pada skala seluruh populasi kampus, intervensi ini diproyeksikan menyelamatkan **~480 mahasiswa**.
+  - Dengan estimasi SPP Rp 6.000.000 per semester untuk 4 semester tersisa, kebijakan ini berpotensi **menyelamatkan pendapatan SPP kampus sebesar Rp 11,52 Miliar**.
 
-4. **Layanan Pendampingan Khusus Mahasiswa Usia Dewasa (*Mature Students Support*)**:
-   - Menyediakan fleksibilitas waktu bimbingan akademik dan sesi konseling di luar jam kerja (sore/malam atau daring) bagi mahasiswa berusia di atas 25 tahun yang umumnya memiliki beban kerja atau keluarga.
-   - Mengadakan lokakarya manajemen waktu (*time-management workshop*) dan literasi adaptasi studi pada masa orientasi mahasiswa baru.
+---
 
-5. **Pemberian Insentif Beasiswa Berbasis Retensi**:
-   - Memperluas kuota beasiswa berbasis kebutuhan finansial (*need-based scholarship*) yang dikaitkan dengan kehadiran dan kelulusan mata kuliah semester 1, bukan semata-mata nilai ujian masuk SMA.
+## 🎯 Conclusion
+
+1. **Akar Masalah Terjawab Secara Empiris**:
+   Tingginya angka putus studi di Jaya Jaya Institut dipicu oleh kombinasi **kegagalan adaptasi akademik di semester 1–2 (khususnya rasio kelulusan mata kuliah yang rendah)** dan **kerentanan finansial (tunggakan SPP dan catatan utang)**. Mahasiswa sering kali mengalami *academic stagnation* terlebih dahulu, kemudian diperparah oleh tekanan finansial yang memaksa mereka keluar.
+2. **Kesiapan Model sebagai Sistem Deteksi Dini**:
+   Model machine learning Random Forest terbukti handal (**Akurasi 77,1%, Recall Dropout 75,7%, ROC-AUC 0,892**) dan teruji adil (*unbiased*). Model ini mampu mendeteksi lebih dari 3 dari setiap 4 mahasiswa yang berisiko putus studi sedini mungkin.
+3. **Validasi Nilai Intervensi**:
+   Simulasi kebijakan membuktikan bahwa *dropout rate* dapat ditekan hingga **37,1%** jika pihak kampus mengombinasikan bantuan finansial fleksibel dan tutorial belajar intensif, memberikan perlindungan pendapatan institusional hingga **Rp 11,5 Miliar**.
+
+---
+
+## 💡 Rekomendasi Action Items (Business Recommendations)
+
+Berdasarkan temuan analitik, SHAP values, dan hasil simulasi What-If, dirumuskan 5 rekomendasi strategis bagi manajemen Jaya Jaya Institut:
+
+1. **Implementasi Sistem Peringatan Dini Akademik Terintegrasi (Academic Early Warning System)**:
+   - Hubungkan model machine learning langsung ke Sistem Informasi Akademik (SIAKAD) kampus.
+   - Jalankan kalkulasi *Dropout Risk Score* otomatis setiap akhir semester 1 dan semester 2 saat KHS (Kartu Hasil Studi) diterbitkan.
+   - Kirimkan notifikasi prioritas kepada Dosen Pembimbing Akademik (DPA) untuk mahasiswa dengan skor risiko $> 50\%$ guna penjadwalan sesi konseling wajib.
+
+2. **Skema Bantuan Finansial Fleksibel & Restrukturisasi SPP Tanpa Bunga**:
+   - Mengingat 86,5% penunggak SPP mengalami *dropout*, hapus kebijakan skorsing langsung bagi mahasiswa yang menunggak.
+   - Ganti dengan program cicilan bertahap dan beasiswa darurat (*emergency micro-grants*) bagi mahasiswa berprestasi yang menghadapi kendala ekonomi keluarga mendadak.
+
+3. **Pendirian Klinik Belajar & Program Tutorial Sebaya (*Peer Tutoring Program*)**:
+   - Buka klinik bimbingan belajar gratis untuk mata kuliah dasar tingkat pertama dengan *failure rate* tertinggi (terutama di prodi Teknik Informatika dan Manajemen).
+   - Pasangkan mahasiswa berisiko dengan mahasiswa tingkat atas berprestasi (*peer mentor*) untuk membantu adaptasi metode belajar perguruan tinggi.
+
+4. **Layanan Pendampingan Khusus Mahasiswa Dewasa & Kuliah Malam (*Mature Student Support*)**:
+   - Sediakan fleksibilitas jam bimbingan konseling di luar jam kerja (daring atau akhir pekan) bagi mahasiswa berusia $> 25$ tahun.
+   - Sediakan fasilitas rekaman perkuliahan (*asynchronous lecture capture*) untuk membantu mahasiswa yang memiliki kewajiban kerja atau keluarga.
+
+5. **Penyesuaian Batas Beban SKS Semester Awal**:
+   - Batasi beban pengambilan SKS di semester 2 bagi mahasiswa yang meluluskan kurang dari 60% SKS di semester 1. Fokuskan mahasiswa pada perbaikan mata kuliah prasyarat sebelum mengambil mata kuliah lanjutan guna mencegah beban belajar berlebih (*overload*).
+
+---
+
+## 📂 Struktur Repositori
+
+```
+Penerapan-Data-Science-2/
+│
+├── .gitignore                      # Mengabaikan cache python dan temporary files
+├── README.md                       # Dokumentasi komprehensif proyek & portfolio
+├── requirements.txt                # Daftar pustaka dependensi teruji
+├── data.csv                        # Dataset resmi 4.424 mahasiswa Jaya Jaya Institut
+├── notebook.ipynb                  # Jupyter Notebook CRISP-DM lengkap & dieksekusi
+├── app.py                          # Aplikasi prototype Streamlit interaktif
+│
+└── model/
+    ├── model.joblib                # Model final Random Forest Classifier (~20 MB)
+    └── model_meta.json             # Metadata fitur, metrik evaluasi, & data simulasi
+```
+
+---
+*Dikembangkan dengan dedikasi untuk Proyek Akhir Belajar Penerapan Data Science - Dicoding Indonesia.*
