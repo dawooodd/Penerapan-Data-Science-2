@@ -74,10 +74,13 @@ Proyek ini kompatibel dengan Python 3.10+ (atau Python 3.12). Ikuti langkah-lang
 ---
 
 ## 📊 Business Dashboard
-Sesuai dengan ketentuan dan batasan proyek, Business Intelligence (BI) Dashboard eksternal (Metabase, Tableau, Looker, atau Power BI) dikonfigurasi dan dikelola secara terpisah dan mandiri oleh pengguna/tim internal Jaya Jaya Institut.
 
-- **Tautan Dashboard BI**: *[Placeholder Tautan Dashboard - Dikelola Mandiri oleh Pengguna]*
-- **Tinjauan Dashboard**: Visualisasi analitik makro kohort dan pemantauan fakultas dapat diintegrasikan langsung pada platform BI institusi terkait. Seluruh analisis analitik preskriptif dan model machine learning telah diakomodasi secara komprehensif pada aplikasi prototype Streamlit (`app.py`).
+Dashboard analitik bisnis untuk memantau performa dan retensi mahasiswa Jaya Jaya Institut dibangun menggunakan **Looker Studio** dan terhubung langsung ke data hasil analisis proyek ini.
+
+- **Looker Studio Dashboard Link**: [Jaya Jaya Institut - Student Performance Dashboard](https://lookerstudio.google.com/reporting/PLACEHOLDER-LINK)
+- **Screenshot Dashboard**: Tersedia pada repositori sebagai `nasich_dicoding-dashboard.png`
+- **Sumber Data Dashboard**: `df_clean_mapped.csv` (data mahasiswa termap), `shap_data.csv` (feature importance), `what_if_data.csv` (simulasi intervensi)
+- **Tinjauan Dashboard**: Dashboard menyajikan KPI utama (Total Mahasiswa, Dropout Rate, Graduation Rate), analisis faktor pendorong dropout berbasis SHAP, pemeriksaan keadilan model (*Bias Checking*), dan visualisasi dampak simulasi kebijakan intervensi. Seluruh analisis preskriptif juga tersedia pada aplikasi prototype Streamlit (`app.py`).
 
 ---
 
@@ -115,7 +118,7 @@ Aplikasi prototype deteksi dini dan simulasi kebijakan dapat dijalankan secara l
 
 ### Tautan Deployment Cloud
 Aplikasi prototype ini dapat diakses secara daring melalui Streamlit Community Cloud:
-- **Tautan Aplikasi Web**: *[(https://jaya-institute.streamlit.app/)]*
+- **Tautan Aplikasi Web**: [https://jaya-institute.streamlit.app/](https://jaya-institute.streamlit.app/)
 
 ---
 
@@ -212,16 +215,20 @@ Berdasarkan temuan analitik, SHAP values, dan hasil simulasi What-If, dirumuskan
 ```
 Penerapan-Data-Science-2/
 │
-├── .gitignore                      # Mengabaikan cache python dan temporary files
-├── README.md                       # Dokumentasi komprehensif proyek & portfolio
-├── requirements.txt                # Daftar pustaka dependensi teruji
-├── data.csv                        # Dataset resmi 4.424 mahasiswa Jaya Jaya Institut
-├── notebook.ipynb                  # Jupyter Notebook CRISP-DM lengkap & dieksekusi
-├── app.py                          # Aplikasi prototype Streamlit interaktif
+├── .gitignore                         # Mengabaikan cache python dan temporary files
+├── README.md                          # Dokumentasi komprehensif proyek & portfolio
+├── requirements.txt                   # Daftar pustaka dependensi teruji
+├── data.csv                           # Dataset resmi 4.424 mahasiswa Jaya Jaya Institut
+├── notebook.ipynb                     # Jupyter Notebook CRISP-DM lengkap & dieksekusi
+├── app.py                             # Aplikasi prototype Streamlit interaktif
+├── nasich_dicoding-dashboard.png       # Screenshot dashboard Looker Studio
+├── df_clean_mapped.csv                # Dataset dengan label deskriptif untuk dashboard
+├── shap_data.csv                      # Feature Importance data untuk dashboard
+├── what_if_data.csv                   # Simulasi What-If data untuk dashboard
 │
 └── model/
-    ├── model.joblib                # Model final Random Forest Classifier (~20 MB)
-    └── model_meta.json             # Metadata fitur, metrik evaluasi, & data simulasi
+    ├── model.joblib                   # Model final Random Forest Classifier (~20 MB)
+    └── model_meta.json                # Metadata fitur, metrik evaluasi, & data simulasi
 ```
 
 ---
