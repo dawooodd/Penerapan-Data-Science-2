@@ -5,3 +5,10 @@ __pycache__/
 .env
 venv/
 env/
+
+# Dataset & CSV files (privacy & size)
+*.csv
+data.csv
+df_clean_mapped.csv
+shap_data.csv
+what_if_data.csv
