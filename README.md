@@ -77,7 +77,7 @@ Proyek ini kompatibel dengan Python 3.10+ (atau Python 3.12). Ikuti langkah-lang
 
 Dashboard analitik bisnis untuk memantau performa dan retensi mahasiswa Jaya Jaya Institut dibangun menggunakan **Looker Studio** dan terhubung langsung ke data hasil analisis proyek ini.
 
-- **Looker Studio Dashboard Link**: [Jaya Jaya Institut - Student Performance Dashboard](https://lookerstudio.google.com/reporting/PLACEHOLDER-LINK)
+- **Looker Studio Dashboard Link**: [Jaya Jaya Institut - Student Performance Dashboard](https://datastudio.google.com/reporting/08504851-cd41-49b5-a9c0-3376df7ad174)
 - **Screenshot Dashboard**: Tersedia pada repositori sebagai `nasich_dicoding-dashboard.png`
 - **Sumber Data Dashboard**: `df_clean_mapped.csv` (data mahasiswa termap), `shap_data.csv` (feature importance), `what_if_data.csv` (simulasi intervensi)
 - **Tinjauan Dashboard**: Dashboard menyajikan KPI utama (Total Mahasiswa, Dropout Rate, Graduation Rate), analisis faktor pendorong dropout berbasis SHAP, pemeriksaan keadilan model (*Bias Checking*), dan visualisasi dampak simulasi kebijakan intervensi. Seluruh analisis preskriptif juga tersedia pada aplikasi prototype Streamlit (`app.py`).
