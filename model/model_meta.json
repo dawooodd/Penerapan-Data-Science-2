@@ -1,9 +1,8 @@
 {
     "model_name": "RandomForestClassifier",
     "classes": [
-        "Dropout",
-        "Enrolled",
-        "Graduate"
+        0,
+        1
     ],
     "input_features": [
         "Marital_status",
@@ -90,86 +89,85 @@
         "GDP"
     ],
     "metrics": {
-        "accuracy": 0.7706,
-        "f1_macro": 0.7152,
-        "f1_weighted": 0.7688,
-        "roc_auc_ovr": 0.8916,
-        "dropout_recall": 0.757,
-        "dropout_precision": 0.8301
+        "accuracy": 0.9298,
+        "f1_score": 0.9104,
+        "roc_auc": 0.9722,
+        "dropout_recall": 0.912,
+        "dropout_precision": 0.9088
     },
     "best_parameters": {
         "class_weight": "balanced_subsample",
         "max_depth": 14,
-        "min_samples_split": 5,
-        "n_estimators": 300
+        "min_samples_split": 4,
+        "n_estimators": 200
     },
     "top_features": [
         {
             "Feature": "Total_approval_rate",
-            "Importance": 0.10139268708654774
+            "Importance": 0.1668486424692067
         },
         {
             "Feature": "Approval_rate_2nd",
-            "Importance": 0.09157400093691621
-        },
-        {
-            "Feature": "Curricular_units_2nd_sem_grade",
-            "Importance": 0.05753493297290066
-        },
-        {
-            "Feature": "Curricular_units_2nd_sem_approved",
-            "Importance": 0.055394686336646654
+            "Importance": 0.1027333877490801
         },
         {
             "Feature": "Approval_rate_1st",
-            "Importance": 0.049467870920389574
+            "Importance": 0.09077939353397818
         },
         {
             "Feature": "Total_approved",
-            "Importance": 0.048229621748914854
+            "Importance": 0.08770045262045441
         },
         {
-            "Feature": "Financial_risk_index",
-            "Importance": 0.038227884642739456
-        },
-        {
-            "Feature": "Curricular_units_1st_sem_grade",
-            "Importance": 0.03479950597988603
-        },
-        {
-            "Feature": "Age_at_enrollment",
-            "Importance": 0.03338892821103265
-        },
-        {
-            "Feature": "Admission_grade",
-            "Importance": 0.032130131836891916
-        },
-        {
-            "Feature": "Previous_qualification_grade",
-            "Importance": 0.029677729962274305
-        },
-        {
-            "Feature": "Grade_progression",
-            "Importance": 0.028345551286411887
+            "Feature": "Curricular_units_2nd_sem_approved",
+            "Importance": 0.08536812328594172
         },
         {
             "Feature": "Curricular_units_1st_sem_approved",
-            "Importance": 0.02814922842521127
+            "Importance": 0.05073148947132159
         },
         {
-            "Feature": "Course",
-            "Importance": 0.02592000790665541
+            "Feature": "Curricular_units_2nd_sem_grade",
+            "Importance": 0.045969158373681644
+        },
+        {
+            "Feature": "Financial_risk_index",
+            "Importance": 0.03739768142879918
+        },
+        {
+            "Feature": "Curricular_units_1st_sem_grade",
+            "Importance": 0.02510261643477301
         },
         {
             "Feature": "Tuition_fees_up_to_date",
-            "Importance": 0.025405933262682083
+            "Importance": 0.022155427913977045
+        },
+        {
+            "Feature": "Course",
+            "Importance": 0.019172596413432864
+        },
+        {
+            "Feature": "Admission_grade",
+            "Importance": 0.01868848468815331
+        },
+        {
+            "Feature": "Age_at_enrollment",
+            "Importance": 0.018030097547570997
+        },
+        {
+            "Feature": "Previous_qualification_grade",
+            "Importance": 0.01687781602206347
+        },
+        {
+            "Feature": "Grade_progression",
+            "Importance": 0.01670585544032728
         }
     ],
     "what_if_simulation": {
-        "baseline_dropouts": 259,
-        "simulated_dropouts": 163,
-        "dropouts_averted": 96,
-        "reduction_percentage": 37.1,
-        "projected_revenue_saved_idr": -1364901888
+        "baseline_dropouts": 285,
+        "simulated_dropouts": 201,
+        "dropouts_averted": 84,
+        "reduction_percentage": 29.5,
+        "projected_revenue_saved_idr": 1490065408
     }
 }

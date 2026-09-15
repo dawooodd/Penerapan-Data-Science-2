@@ -211,7 +211,7 @@ with st.sidebar:
         st.caption(f"**Akurasi**: {model_meta['metrics']['accuracy'] * 100:.1f}%")
         st.caption(f"**Recall Dropout**: {model_meta['metrics']['dropout_recall'] * 100:.1f}%")
         st.caption(f"**Presisi Dropout**: {model_meta['metrics']['dropout_precision'] * 100:.1f}%")
-        st.caption(f"**ROC-AUC (OvR)**: {model_meta['metrics']['roc_auc_ovr']:.3f}")
+        st.caption(f"**ROC-AUC**: {model_meta['metrics']['roc_auc']:.3f}")
     
     st.markdown("---")
     st.caption("Dicoding Applied Data Science Final Project  \n© 2026 Jaya Jaya Institut")
@@ -415,10 +415,17 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
         prep_df = engineer_features(raw_df)
         
         # Predict
-        prediction = model.predict(prep_df)[0]
+        raw_pred = model.predict(prep_df)[0]
+        prediction = 'Dropout' if raw_pred in [1, '1', 'Dropout'] else 'Graduate'
         probabilities = model.predict_proba(prep_df)[0]
-        prob_dict = {c: p for c, p in zip(model.classes_, probabilities)}
-        dropout_prob = prob_dict.get('Dropout', 0.0)
+        
+        # Probabilitas kelas biner: index 1 = Dropout, index 0 = Graduate
+        classes_list = list(model.classes_)
+        dropout_idx = classes_list.index(1) if 1 in classes_list else (classes_list.index('Dropout') if 'Dropout' in classes_list else 1)
+        grad_idx = classes_list.index(0) if 0 in classes_list else (classes_list.index('Graduate') if 'Graduate' in classes_list else 0)
+        
+        dropout_prob = float(probabilities[dropout_idx])
+        grad_prob = float(probabilities[grad_idx])
         
         st.markdown("---")
         st.markdown("### 📊 Hasil Analisis Prediksi")
@@ -435,12 +442,12 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
-            elif prediction == 'Enrolled' or (dropout_prob >= 0.30 and dropout_prob < 0.55):
+            elif dropout_prob >= 0.30 and dropout_prob < 0.55:
                 st.markdown(f"""
                 <div class="risk-medium">
                     <h3 style="margin:0; color:#92400E;">🟡 Status: Risiko Sedang (Perlu Perhatian)</h3>
                     <p style="margin-top:5px; font-size:1.05rem;">
-                        Mahasiswa berstatus <b>Aktif (Enrolled)</b> namun menunjukkan beberapa sinyal kerentanan akademik atau finansial.
+                        Mahasiswa berpotensi mengalami kerentanan akademik atau finansial yang memerlukan pendampingan dan pemantauan berkala.
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -458,11 +465,8 @@ if menu == "🎯 Prediksi Mahasiswa Tunggal":
             st.write(f"**Probabilitas Dropout:** `{dropout_prob * 100:.1f}%`")
             st.progress(float(dropout_prob))
             
-            st.write(f"**Probabilitas Masih Aktif (Enrolled):** `{prob_dict.get('Enrolled', 0.0) * 100:.1f}%`")
-            st.progress(float(prob_dict.get('Enrolled', 0.0)))
-            
-            st.write(f"**Probabilitas Lulus (Graduate):** `{prob_dict.get('Graduate', 0.0) * 100:.1f}%`")
-            st.progress(float(prob_dict.get('Graduate', 0.0)))
+            st.write(f"**Probabilitas Lulus (Graduate):** `{grad_prob * 100:.1f}%`")
+            st.progress(float(grad_prob))
 
         with res_col2:
             st.markdown("""
@@ -541,11 +545,13 @@ elif menu == "📁 Prediksi Massal (Batch CSV)":
                     input_cols = model_meta['input_features']
                     X_batch = prep_batch[input_cols]
                     
-                    batch_preds = model.predict(X_batch)
+                    batch_preds_raw = model.predict(X_batch)
+                    target_map = {1: 'Dropout', 0: 'Graduate', '1': 'Dropout', '0': 'Graduate', 'Dropout': 'Dropout', 'Graduate': 'Graduate'}
+                    batch_preds = [target_map.get(p, p) for p in batch_preds_raw]
                     batch_probs = model.predict_proba(X_batch)
                     
                     classes = list(model.classes_)
-                    dropout_idx = classes.index('Dropout') if 'Dropout' in classes else 0
+                    dropout_idx = classes.index(1) if 1 in classes else (classes.index('Dropout') if 'Dropout' in classes else 1)
                     dropout_probs = batch_probs[:, dropout_idx]
                     
                     def get_risk_tier(prob):
@@ -675,9 +681,10 @@ elif menu == "🧪 Simulasi Kebijakan (What-If)":
             y_base_pred = model.predict(prep_base[cols])
             y_base_prob = model.predict_proba(prep_base[cols])
             
-            dropout_idx = list(model.classes_).index('Dropout')
+            classes_list = list(model.classes_)
+            dropout_idx = classes_list.index(1) if 1 in classes_list else (classes_list.index('Dropout') if 'Dropout' in classes_list else 1)
             p_base_dropout = y_base_prob[:, dropout_idx]
-            base_dropout_count = (y_base_pred == 'Dropout').sum()
+            base_dropout_count = int((y_base_pred == 1).sum() if 1 in y_base_pred else (y_base_pred == 'Dropout').sum())
             
             # 2. Simulated DataFrame
             df_sim = df_raw_sim.copy()
@@ -703,7 +710,7 @@ elif menu == "🧪 Simulasi Kebijakan (What-If)":
             y_sim_pred = model.predict(prep_sim[cols])
             y_sim_prob = model.predict_proba(prep_sim[cols])
             p_sim_dropout = y_sim_prob[:, dropout_idx]
-            sim_dropout_count = (y_sim_pred == 'Dropout').sum()
+            sim_dropout_count = int((y_sim_pred == 1).sum() if 1 in y_sim_pred else (y_sim_pred == 'Dropout').sum())
             
             saved_count = base_dropout_count - sim_dropout_count
             reduction_pct = (saved_count / base_dropout_count * 100) if base_dropout_count > 0 else 0
@@ -779,7 +786,7 @@ elif menu == "📊 Performa Model & Fitur":
     with col_m3:
         st.metric("Dropout Presisi", f"{metrics['dropout_precision']*100:.2f}%", help="Ketepatan prediksi mahasiswa yang dilabeli dropout")
     with col_m4:
-        st.metric("ROC-AUC (One-vs-Rest)", f"{metrics['roc_auc_ovr']:.4f}", help="Kemampuan diskriminasi probabilitas model")
+        st.metric("ROC-AUC", f"{metrics['roc_auc']:.4f}", help="Kemampuan diskriminasi probabilitas model klasifikasi biner")
         
     st.markdown("---")
     
