@@ -218,13 +218,9 @@ Penerapan-Data-Science-2/
 ├── .gitignore                         # Mengabaikan cache python dan temporary files
 ├── README.md                          # Dokumentasi komprehensif proyek & portfolio
 ├── requirements.txt                   # Daftar pustaka dependensi teruji
-├── data.csv                           # Dataset resmi 4.424 mahasiswa Jaya Jaya Institut
 ├── notebook.ipynb                     # Jupyter Notebook CRISP-DM lengkap & dieksekusi
 ├── app.py                             # Aplikasi prototype Streamlit interaktif
 ├── nasich_dicoding-dashboard.png       # Screenshot dashboard Looker Studio
-├── df_clean_mapped.csv                # Dataset dengan label deskriptif untuk dashboard
-├── shap_data.csv                      # Feature Importance data untuk dashboard
-├── what_if_data.csv                   # Simulasi What-If data untuk dashboard
 │
 └── model/
     ├── model.joblib                   # Model final Random Forest Classifier (~20 MB)
