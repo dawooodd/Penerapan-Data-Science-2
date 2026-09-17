@@ -215,7 +215,7 @@ Berdasarkan temuan analitik, SHAP values, dan hasil simulasi What-If, dirumuskan
 ```
 Penerapan-Data-Science-2/
 │
-├── .gitignore                         # Mengabaikan cache python dan temporary files
+├── .gitignore                         # Mengabaikan cache python, temporary files, & berkas CSV
 ├── README.md                          # Dokumentasi komprehensif proyek & portfolio
 ├── requirements.txt                   # Daftar pustaka dependensi teruji
 ├── notebook.ipynb                     # Jupyter Notebook CRISP-DM lengkap & dieksekusi

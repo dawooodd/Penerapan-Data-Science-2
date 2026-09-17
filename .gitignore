@@ -1,7 +1,19 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Environments & sensitive files
 .env
+.venv/
 venv/
 env/
+ENV/
+
+# Datasets & CSV files (Semua file CSV di root maupun subfolder diabaikan)
+*.csv
+**/*.csv
