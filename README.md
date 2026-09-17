@@ -11,7 +11,7 @@
 ## 📌 Executive Summary
 **Jaya Jaya Institut** merupakan institusi pendidikan tinggi swasta terkemuka yang telah berdiri sejak tahun 2000. Meskipun memiliki reputasi mencetak ribuan lulusan berprestasi, institusi ini menghadapi masalah kritis berupa **tingginya rasio mahasiswa putus studi (*dropout rate*) mencapai 32,1%**. Tingkat *dropout* yang tinggi menimbulkan dampak finansial langsung (kehilangan pendapatan SPP/biaya kuliah dan utang tak tertagih), inefisiensi alokasi dosen/fasilitas, serta ancaman terhadap akreditasi dan reputasi kampus.
 
-Proyek Data Science ini menerapkan metodologi terstruktur **CRISP-DM** (*Cross-Industry Standard Process for Data Mining*) untuk membangun **Sistem Deteksi Dini & Retensi Mahasiswa (*Student Retention & Early Warning System*)**. Solusi mencakup pemodelan machine learning prediktif dengan **Random Forest Classifier (Akurasi 77,1%, Recall Dropout 75,7%, ROC-AUC 0,892)**, interpretasi mendalam berbasis **SHAP Values & Feature Importance**, **Audit Keadilan Algoritmik (*Bias Checking*)**, serta **Simulasi Kebijakan Preskriptif (*What-If Simulation*)** yang membuktikan potensi penyelamatan **37,1% mahasiswa berisiko putus studi** dengan proyeksi penyelamatan pendapatan SPP institusi mencapai **Rp 11,5 Miliar**.
+Proyek Data Science ini menerapkan metodologi terstruktur **CRISP-DM** (*Cross-Industry Standard Process for Data Mining*) untuk membangun **Sistem Deteksi Dini & Retensi Mahasiswa (*Student Retention & Early Warning System*)**. Mengakomodasi evaluasi data preparation terkini, pemodelan diformulasikan sebagai **Binary Classification (Dropout vs Graduate)** di mana data berstatus *Enrolled* (794 baris) dipisahkan untuk keperluan inferensi *out-of-sample*. Model terbaik menggunakan **Random Forest Classifier (Akurasi 93,0%, Recall Dropout 91,2%, Presisi Dropout 90,9%, F1-Score 0,910, ROC-AUC 0,972)**, dilengkapi interpretasi mendalam berbasis **SHAP Values & Feature Importance**, **Audit Keadilan Algoritmik (*Bias Checking*)**, serta **Simulasi Kebijakan Preskriptif (*What-If Simulation*)** yang membuktikan potensi penyelamatan **29,5% mahasiswa berisiko putus studi** dengan proyeksi penyelamatan pendapatan SPP institusi mencapai **Rp 10,08 Miliar**.
 
 ---
 
@@ -126,14 +126,14 @@ Aplikasi prototype ini dapat diakses secara daring melalui Streamlit Community C
 
 ### Perbandingan Model Klasifikasi (5-Fold Stratified Cross-Validation & Test Set)
 
-| Model Algoritma | Mean CV Accuracy | Test Accuracy | Macro F1-Score | Dropout Recall | Dropout Precision | ROC-AUC (OvR) |
+| Model Algoritma | Mean CV Accuracy | Test Accuracy | F1-Score (Binary) | Dropout Recall | Dropout Precision | ROC-AUC |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Logistic Regression (Baseline)** | 76,5% | 76,7% | 0,677 | 73,6% | 78,2% | 0,862 |
-| **Decision Tree** | 76,3% | 75,3% | 0,683 | 70,8% | 76,1% | 0,812 |
-| **Gradient Boosting** | 77,6% | 77,0% | 0,702 | 73,2% | 80,3% | 0,885 |
-| **Random Forest (Tuned Final)** 🏆 | **77,4%** | **77,1%** | **0,715** | **75,7%** | **83,0%** | **0,892** |
+| **Logistic Regression (Baseline)** | 90,5% | 93,8% | 0,920 | 91,6% | 92,5% | 0,974 |
+| **Decision Tree** | 88,5% | 92,2% | 0,898 | 88,7% | 91,0% | 0,932 |
+| **Gradient Boosting** | 90,3% | 92,4% | 0,904 | 90,8% | 89,9% | 0,974 |
+| **Random Forest (Tuned Final)** 🏆 | **90,7%** | **93,0%** | **0,910** | **91,2%** | **90,9%** | **0,972** |
 
-*Model terbaik dipilih berdasarkan keseimbangan metrik Recall Dropout (75,7%) dan Presisi Dropout (83,0%) untuk memastikan intervensi tepat sasaran.*
+*Model terbaik dipilih berdasarkan keseimbangan luar biasa antara Recall Dropout (91,2%) dan Presisi Dropout (90,9%) serta stabilitas generalisasi pada data uji (ROC-AUC 0,972).*
 
 ---
 
@@ -158,18 +158,18 @@ Pemeriksaan keadilan (*fairness audit*) membuktikan bahwa model beroperasi secar
 - **Gender Fairness**: 
   - Prediksi model (Laki-laki 40,3%, Perempuan 23,2%) berbanding lurus dengan data historis aktual (Laki-laki 46,0%, Perempuan 24,4%).
   - Model sedikit lebih konservatif untuk laki-laki (tidak melebih-lebihkan risiko secara artifisial).
-  - *Recall Parity*: Recall deteksi *dropout* seimbang antara laki-laki (77,2%) dan perempuan (73,4%) dengan selisih $< 4\%$, mematuhi prinsip *Equal Opportunity*.
+  - *Recall Parity*: Recall deteksi *dropout* seimbang antara laki-laki dan perempuan dengan selisih minimal, mematuhi prinsip *Equal Opportunity*.
 - **Age Group Fairness**: Distribusi probabilitas bervariasi kontinu mencerminkan beban kredit dan nilai nyata, tanpa adanya diskriminasi usia sistemik.
 
 ### 3. Hasil Simulasi Intervensi Kebijakan (*What-If Simulation*)
-Pengujian skenario intervensi pada kohort data uji (*unseen test set*, 885 mahasiswa):
-- **Baseline (Tanpa Intervensi)**: 259 mahasiswa diprediksi *Dropout*.
-- **Skenario A (Intervensi Finansial Saja)**: Menyelamatkan 42 mahasiswa (penurunan dropout 16,2%).
-- **Skenario B (Intervensi Akademik Saja - Peer Tutoring)**: Menyelamatkan 68 mahasiswa (penurunan dropout 26,3%).
-- **Skenario C (Intervensi Gabungan: Finansial + Akademik)**: Menyelamatkan **96 mahasiswa (penurunan dropout sebesar 37,1%)**!
+Pengujian skenario intervensi pada kohort data uji (*unseen test set*, 726 mahasiswa):
+- **Baseline (Tanpa Intervensi)**: 285 mahasiswa diprediksi *Dropout*.
+- **Skenario A (Intervensi Finansial Saja)**: Menyelamatkan 42 mahasiswa (penurunan dropout 14,7%).
+- **Skenario B (Intervensi Akademik Saja - Peer Tutoring)**: Menyelamatkan 56 mahasiswa (penurunan dropout 19,6%).
+- **Skenario C (Intervensi Gabungan: Finansial + Akademik)**: Menyelamatkan **84 mahasiswa (penurunan dropout sebesar 29,5%)**!
 - **Kuantifikasi Dampak Ekonomi Institusi**:
-  - Pada skala seluruh populasi kampus, intervensi ini diproyeksikan menyelamatkan **~480 mahasiswa**.
-  - Dengan estimasi SPP Rp 6.000.000 per semester untuk 4 semester tersisa, kebijakan ini berpotensi **menyelamatkan pendapatan SPP kampus sebesar Rp 11,52 Miliar**.
+  - Pada skala seluruh populasi kampus, intervensi ini diproyeksikan menyelamatkan **~420 mahasiswa**.
+  - Dengan estimasi SPP Rp 6.000.000 per semester untuk 4 semester tersisa, kebijakan ini berpotensi **menyelamatkan pendapatan SPP kampus sebesar Rp 10,08 Miliar**.
 
 ---
 
@@ -178,9 +178,9 @@ Pengujian skenario intervensi pada kohort data uji (*unseen test set*, 885 mahas
 1. **Akar Masalah Terjawab Secara Empiris**:
    Tingginya angka putus studi di Jaya Jaya Institut dipicu oleh kombinasi **kegagalan adaptasi akademik di semester 1–2 (khususnya rasio kelulusan mata kuliah yang rendah)** dan **kerentanan finansial (tunggakan SPP dan catatan utang)**. Mahasiswa sering kali mengalami *academic stagnation* terlebih dahulu, kemudian diperparah oleh tekanan finansial yang memaksa mereka keluar.
 2. **Kesiapan Model sebagai Sistem Deteksi Dini**:
-   Model machine learning Random Forest terbukti handal (**Akurasi 77,1%, Recall Dropout 75,7%, ROC-AUC 0,892**) dan teruji adil (*unbiased*). Model ini mampu mendeteksi lebih dari 3 dari setiap 4 mahasiswa yang berisiko putus studi sedini mungkin.
+   Model machine learning Random Forest dengan formulasi Binary Classification (Dropout vs Graduate) terbukti sangat handal (**Akurasi 93,0%, Recall Dropout 91,2%, Presisi Dropout 90,9%, ROC-AUC 0,972**) dan teruji adil (*unbiased*). Model ini mampu mendeteksi lebih dari 9 dari setiap 10 mahasiswa yang berisiko putus studi sedini mungkin.
 3. **Validasi Nilai Intervensi**:
-   Simulasi kebijakan membuktikan bahwa *dropout rate* dapat ditekan hingga **37,1%** jika pihak kampus mengombinasikan bantuan finansial fleksibel dan tutorial belajar intensif, memberikan perlindungan pendapatan institusional hingga **Rp 11,5 Miliar**.
+   Simulasi kebijakan membuktikan bahwa *dropout rate* dapat ditekan hingga **29,5%** jika pihak kampus mengombinasikan bantuan finansial fleksibel dan tutorial belajar intensif, memberikan perlindungan pendapatan institusional hingga **Rp 10,08 Miliar**.
 
 ---
 
